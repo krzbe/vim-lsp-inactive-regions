@@ -95,14 +95,14 @@ function s:ClearRegionsOn(id)
 endfunction
 
 function s:SetRegionsOn(window)
-    let l:cur_buf = bufnr('%')
+    let l:bufid = winbufnr(a:window)
 
-    if !has_key(s:buffer_inactive_region, l:cur_buf)
+    if !has_key(s:buffer_inactive_region, l:bufid)
         return
     endif
 
-    for l:item in s:buffer_inactive_region[l:cur_buf]
-            call s:AddMatchGroup(s:inactive_range_section_hl, l:item[0], l:item[1], a:window)
+    for l:item in s:buffer_inactive_region[l:bufid]
+        call s:AddMatchGroup(s:inactive_range_section_hl, l:item[0], l:item[1], a:window)
     endfor
 endfunction
 
