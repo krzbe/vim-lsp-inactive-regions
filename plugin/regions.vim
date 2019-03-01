@@ -40,12 +40,19 @@ function ProcessInactiveRegions(server, data)
         return
     endif
 
-    if '$cquery/setInactiveRegions' != a:data['response']['method']
+    let l:s_offset = 1
+
+    if '$ccls/publishSkippedRanges' == a:data['response']['method']
+        let l:regions = a:data['response']['params']['skippedRanges']
+        let l:e_offset = 0
+    elseif '$cquery/setInactiveRegions' == a:data['response']['method']
+        let l:regions = a:data['response']['params']['inactiveRegions']
+        let l:e_offset = 1
+    else
         return
     endif
 
     let l:uri = a:data['response']['params']['uri']
-    let l:regions = a:data['response']['params']['inactiveRegions']
 
     if !s:is_file_uri(l:uri)
         return
@@ -69,7 +76,7 @@ function ProcessInactiveRegions(server, data)
                 continue
             endif
 
-            call add(l:buf_regions, [l:start['line']+1, l:end['line']+1])
+            call add(l:buf_regions, [l:start['line'] + l:s_offset, l:end['line'] + l:e_offset])
         endfor
     endif
 
@@ -123,4 +130,5 @@ augroup lspInactiveRegions
   au BufDelete * call s:OnBufDelete()
 augroup END
 
+call lsp#register_notifications("$ccls/publishSkippedRanges", function("ProcessInactiveRegions"))
 call lsp#register_notifications("$cquery/setInactiveRegions", function("ProcessInactiveRegions"))

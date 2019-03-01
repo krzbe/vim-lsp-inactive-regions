@@ -3,6 +3,11 @@ vim-lsp-inactive-regions
 This is a vim-lsp extension to support inactive regions reply from LSP.
 Requires vim-lsp (https://github.com/prabirshrestha/vim-lsp).
 
+Supported LSP servers:
+
+ * cquery
+ * ccls
+
 Configuration
 -------------
 g:inactive\_range\_section\_hl - use it to set different highlight group
